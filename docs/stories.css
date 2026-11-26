@@ -182,3 +182,12 @@ nav.navbar .navbar-title-text > a { cursor: pointer; }
 .card.fd-card.fd-hdfold .qhead > .fd-hdsum { display: inline; font-size: 0.95rem; font-weight: 600; color: var(--t-ink, #212529); }
 .card.fd-card.fd-hdfold.fd-has-tl > .card-body { grid-template-columns: minmax(0, 1fr); }
 .card.fd-card.fd-hdfold .fd-acbar { margin-top: 0.4rem; padding-top: 0.4rem; }
+
+/* a finding open on the start page (Nov. 26, user): it is about all agencies and all years, so the choices of agency and years,
+   which would not change it, are hidden, and the title says what the panel shows; closing the finding brings them back */
+.fd-qstory { display: none; }
+body:has(.odetail.fd-story:not([hidden])) .fd-tl,
+body:has(.odetail.fd-story:not([hidden])) .fd-acbar,
+body:has(.odetail.fd-story:not([hidden])) .qhead > .fd-qtitle,
+body:has(.odetail.fd-story:not([hidden])) .qhead > .fd-hdsum { display: none !important; }
+body:has(.odetail.fd-story:not([hidden])) .qhead > .fd-qstory { display: block; }

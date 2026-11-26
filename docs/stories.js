@@ -218,6 +218,9 @@ function fdAgency(a) { return a === "Department of Defense" || a === "Department
       const tt = document.createElement("span"); tt.className = "fd-qtitle";   // the title after "Question 1" is loose text: in a span, it can be hidden
       [...qh.childNodes].filter(n => n !== qn && !(n.nodeType === 1 && n.classList.contains("sel"))).forEach(n => tt.appendChild(n));
       const hdSum = document.createElement("span"); hdSum.className = "fd-hdsum"; qn.after(hdSum, tt);
+      // shown in place of the title while a finding is open on the start page (stories.css): the finding is about all agencies
+      // and all years, whatever is chosen, so the chosen name would mislead
+      const st = document.createElement("span"); st.className = "fd-qstory"; st.textContent = "What the reports show"; tt.after(st);
       const go = () => fold(card, !card.classList.contains("fd-hdfold"));
       qn.setAttribute("role", "button"); qn.tabIndex = 0; qn.setAttribute("aria-label", `${qn.textContent.trim()}: fold or open the title and the years`);
       qn.addEventListener("click", go); qn.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go() } });
@@ -373,7 +376,7 @@ function fdAgency(a) { return a === "Department of Defense" || a === "Department
    The button keeps the class fd-home so the top-bar styles still apply. ---------- */
 (function () {
   const openPanel = () => document.querySelector(".odetail:not([hidden])");
-  const goHome = e => { if (e) e.preventDefault(); window.__openCard = null;
+  const goHome = e => { if (e) e.preventDefault(); window.__openCard = null; window.__openFinding = null;
     const c = openPanel(); if (c) c.querySelector(".od-close").click();
     const on = document.querySelector(".qbtn.on"); if (on) on.click(); window.scrollTo(0, 0) };
   const sleep = ms => new Promise(r => setTimeout(r, ms));

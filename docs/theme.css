@@ -151,7 +151,7 @@ div[class*="-swatches"] { font-family: var(--t-sans) !important; color: var(--t-
 .ocard.hl .oc-val { color: var(--t-accent-ink); }
 /* the lines above the cards: what the dashboard is, and the note on the agencies counted */
 .ov-intro { font-family: var(--t-sans); color: var(--t-ink2); font-size: 0.95rem; line-height: 1.55; max-width: 62rem; margin: 0.2rem 0 0.9rem; }
-.ov-cover { margin: -0.4rem 0 1rem; }
+.ov-cover { margin: 0.1rem 0 1rem; }
 .oc-mark { font-family: var(--t-sans); }
 /* hovering a card: what stands out, laid over its small chart (the big number stays in view, no other card is covered) */
 .oc-fig { position: relative; }

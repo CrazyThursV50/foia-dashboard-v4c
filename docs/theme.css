@@ -205,3 +205,8 @@ div[class*="-swatches"] { font-family: var(--t-sans) !important; color: var(--t-
 .ofind.tall .of-tag::after { content: " →"; }
 .of-big { font-family: var(--t-sans); font-size: 1.35rem; line-height: 1.3; font-weight: 700; color: var(--t-ink); margin: 0.3rem 0 0.8rem; letter-spacing: -0.01em; }
 .od-text .of-tag { margin-bottom: 0; }
+/* the findings as headlines (Nov. 26, user: something to see at a glance): a few words in bold, one short line of numbers under them */
+.of-hed { display: block; font-size: 0.98rem; font-weight: 700; line-height: 1.25; color: var(--t-ink); letter-spacing: -0.005em; }
+.of-dek { display: block; font-size: 0.76rem; line-height: 1.35; color: var(--t-muted); margin-top: 0.2rem; }
+.of-item:hover .of-hed { color: var(--t-accent-ink); }
+.od-text .of-lead { font-size: 1rem; color: var(--t-ink2); }

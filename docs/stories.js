@@ -310,7 +310,8 @@ function fdAgency(a) { return a === "Department of Defense" || a === "Department
     if ((checkedText("Agencies added up in the total") || "").startsWith("Only")) p.set("scope", "same");
     // (an address no longer carries an appeals base: Question 5 shows the reversal rate out of all processed appeals and out of
     // those decided, side by side, so "base=all" in an old link is left out)
-    const od = document.querySelector(".odetail:not([hidden])"); if (!q && od) p.set("card", od.dataset.i);   // the card opened on the overview
+    const od = document.querySelector(".odetail:not([hidden])");   // the card or the finding opened on the overview (a finding: find=N; Nov. 26, it wrote card=undefined)
+    if (!q && od && od.dataset.f) p.set("find", od.dataset.f); else if (!q && od && od.dataset.i) p.set("card", od.dataset.i);
     if (q === 7) { const ty = selOf("Data type"), me = selOf("Measure");
       if (ty) p.set("type", ty.selectedOptions[0].textContent.trim().slice(0, 2)); if (me) p.set("m", me.selectedOptions[0].textContent.trim()) }
     return p;
@@ -367,6 +368,7 @@ function fdAgency(a) { return a === "Department of Defense" || a === "Department
   new MutationObserver(button).observe(document.documentElement, {childList: true, subtree: true});
   const start = new URLSearchParams(location.search);
   if (!start.get("q") && +start.get("card") > 0) window.__openCard = +start.get("card") - 1;   // the overview opens this card when it is first drawn
+  if (!start.get("q") && +start.get("find") > 0) window.__openFinding = +start.get("find") - 1;   // or this finding
   if ([...start.keys()].length) restore(start);
 })();
 

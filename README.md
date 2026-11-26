@@ -2,7 +2,10 @@
 
 A dashboard of the federal agencies' annual FOIA reports, FY2008–FY2025, made by a BU Spark! (DS 701) team for MuckRock.
 
-Live page: https://crazythursv50.github.io/client-meeting-1117/
+This is version v4c: the start page has a column of five findings for all agencies, each opening a chart made for it.
+The version without it is at https://github.com/CrazyThursV50/client-meeting-1117.
+
+Live page: https://crazythursv50.github.io/foia-dashboard-v4c/
 
 ## Data
 

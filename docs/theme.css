@@ -186,7 +186,7 @@ div[class*="-swatches"] { font-family: var(--t-sans) !important; color: var(--t-
 .fd-guide h2 { font-family: var(--t-sans); font-weight: 800; letter-spacing: -0.025em; color: var(--t-ink); }
 .fd-guide h3 { font-family: var(--t-sans); font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--t-label); }
 .fd-keep { background: var(--t-hover); border-left-color: var(--t-accent); border-radius: 0; }
-/* the findings card on the start page (Nov. 26): A = tall, in the last column across both rows; B (and narrow screens) = a row above the cards */
+/* the findings card on the start page (Nov. 26): tall, in the last column across both rows; on narrow screens, a row above the cards */
 .ofind { border-top: 2px solid var(--t-line); padding: 0.7rem 0 1.2rem; font-family: var(--t-sans); }
 .ofind.tall { grid-column: -2 / -1; grid-row: 1 / span 2; }
 .ofind.wide { grid-column: 1 / -1; margin-bottom: 1rem; }

@@ -188,25 +188,22 @@ div[class*="-swatches"] { font-family: var(--t-sans) !important; color: var(--t-
 .fd-keep { background: var(--t-hover); border-left-color: var(--t-accent); border-radius: 0; }
 /* the findings card on the start page (Nov. 26): tall, in the last column across both rows; on narrow screens, a row above the cards */
 .ofind { border-top: 2px solid var(--t-line); padding: 0.7rem 0 1.2rem; font-family: var(--t-sans); }
+.ofind.tall { padding-bottom: 0.3rem; }
 .ofind.tall { grid-column: -2 / -1; grid-row: 1 / span 2; }
 .ofind.wide { grid-column: 1 / -1; margin-bottom: 1rem; }
 .of-h { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--t-ink); }
-.of-sub { font-size: 0.72rem; color: var(--t-muted); margin: 0.15rem 0 0.4rem; }
-.of-item { display: block; padding: 0.5rem 0 0.45rem; border-top: 1px solid var(--t-hair); color: var(--t-ink); text-decoration: none; }
+.of-sub { font-size: 0.72rem; color: var(--t-muted); margin: 0.1rem 0 0.25rem; }
+.of-item { display: block; padding: 0.4rem 0 0.35rem; border-top: 1px solid var(--t-hair); color: var(--t-ink); text-decoration: none; }
 .of-item:first-child { border-top: 0; }
-.of-item:hover .of-text { color: var(--t-accent-ink); }
-.of-item:hover .of-go { text-decoration: underline; }
-.of-tag { display: block; font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--t-label); margin-bottom: 0.15rem; }
-.of-text { display: block; font-size: 0.84rem; line-height: 1.35; }
-.of-go { display: block; font-size: 0.7rem; color: var(--t-accent-ink); margin-top: 0.15rem; }
+.of-tag { display: block; font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--t-label); margin-bottom: 0.15rem; }   /* in the panel only */
 .ofind.wide .of-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 0 22px; }
+.ofind.wide.five .of-list { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0 18px; }   /* over four columns of cards: the five in one row, none left alone */
 .ofind.wide .of-item { border-top: 0; border-left: 3px solid var(--t-accent); padding: 0.2rem 0 0.2rem 0.7rem; margin-top: 0.5rem; }
-.ofind.tall .of-go { display: none; }   /* tall: the arrow goes after the tag, so the five fit in two rows of cards */
-.ofind.tall .of-tag::after { content: " →"; }
 .of-big { font-family: var(--t-sans); font-size: 1.35rem; line-height: 1.3; font-weight: 700; color: var(--t-ink); margin: 0.3rem 0 0.8rem; letter-spacing: -0.01em; }
 .od-text .of-tag { margin-bottom: 0; }
 /* the findings as headlines (Nov. 26, user: something to see at a glance): a few words in bold, one short line of numbers under them */
-.of-hed { display: block; font-size: 0.98rem; font-weight: 700; line-height: 1.25; color: var(--t-ink); letter-spacing: -0.005em; }
-.of-dek { display: block; font-size: 0.76rem; line-height: 1.35; color: var(--t-muted); margin-top: 0.2rem; }
+.of-hed { display: block; font-size: 0.95rem; font-weight: 700; line-height: 1.22; color: var(--t-ink); letter-spacing: -0.005em; }
+.of-item .of-hed::after { content: "\00a0→"; color: var(--t-accent-ink); }   /* the arrow kept with the last word: a click opens the chart */
+.of-dek { display: block; font-size: 0.73rem; line-height: 1.32; color: var(--t-muted); margin-top: 0.15rem; }
 .of-item:hover .of-hed { color: var(--t-accent-ink); }
 .od-text .of-lead { font-size: 1rem; color: var(--t-ink2); }

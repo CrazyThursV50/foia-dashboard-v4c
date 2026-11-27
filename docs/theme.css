@@ -207,3 +207,13 @@ div[class*="-swatches"] { font-family: var(--t-sans) !important; color: var(--t-
 .of-dek { display: block; font-size: 0.73rem; line-height: 1.32; color: var(--t-muted); margin-top: 0.15rem; }
 .of-item:hover .of-hed { color: var(--t-accent-ink); }
 .od-text .of-lead { font-size: 1rem; color: var(--t-ink2); }
+/* a finding told in words (Nov. 26, user: more analysis in words, not more charts): its paragraphs beside one chart, half and half */
+@media (min-width: 1251px) { .od-cols.os-cols { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+.od-cols.os-cols .os-text p { font-size: 0.92rem; line-height: 1.55; margin: 0.8rem 0 0; }   /* (bslib's .card-body p sets 0 and would win over two classes) */
+.os-text p b { color: var(--t-ink); font-weight: 700; }
+.os-text .oc-go { margin-top: 1rem; }
+/* the big number stays on one line (Nov. 26: at 1,400-1,500 px the shaded card's 1,574,037 broke in two and made its row taller);
+   on narrow cards it is set smaller, the same in every card of a row: 19% of the column (the shaded card's inside is narrower) */
+.ocard { container-type: inline-size; }
+.oc-val { white-space: nowrap; font-size: min(2.5rem, 19cqi); }
+.ocard.hl .oc-val { font-size: min(2.5rem, calc((100cqi + 1.4rem) * 0.19)); }

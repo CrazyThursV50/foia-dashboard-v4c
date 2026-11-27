@@ -191,8 +191,9 @@ div[class*="-swatches"] { font-family: var(--t-sans) !important; color: var(--t-
 .ofind.tall { padding-bottom: 0.3rem; }
 .ofind.tall { grid-column: -2 / -1; grid-row: 1 / span 2; }
 .ofind.wide { grid-column: 1 / -1; margin-bottom: 1rem; }
-.of-h { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--t-ink); }
-.of-sub { font-size: 0.72rem; color: var(--t-muted); margin: 0.1rem 0 0.25rem; }
+.ofind { container-type: inline-size; }
+.of-h { font-size: min(1.2rem, 9.2cqi); white-space: nowrap; font-weight: 800; letter-spacing: -0.015em; line-height: 1.2; color: var(--t-ink); }   /* larger than the headlines under it (Nov. 26, user), as a title in sentence case (capitals at this size do not fit the column); on one line, in step with the column's width */
+.of-sub { font-size: 0.8rem; color: var(--t-muted); margin: 0.15rem 0 0.3rem; }
 .of-item { display: block; padding: 0.4rem 0 0.35rem; border-top: 1px solid var(--t-hair); color: var(--t-ink); text-decoration: none; }
 .of-item:first-child { border-top: 0; }
 .of-tag { display: block; font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--t-label); margin-bottom: 0.15rem; }   /* in the panel only */

@@ -121,8 +121,8 @@ nav.navbar { position: relative; }
 .fd-home.fd-at-home { opacity: 0.55; cursor: default; }
 .fd-home.fd-at-home:hover { background: transparent; }   /* Reset with nothing to reset */
 nav.navbar .navbar-title-text > a { cursor: pointer; }
-/* top bar: when the data was last updated, left of Reset */
-.fd-updated { position: absolute; right: 6.6rem; top: 50%; transform: translateY(-50%); color: #fff; font-size: 0.85rem; opacity: 0.92; white-space: nowrap; }
+/* top bar: when the data was last updated, at the right (Reset moved to the sidebar on Nov. 27) */
+.fd-updated { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: #fff; font-size: 0.85rem; opacity: 0.92; white-space: nowrap; }
 @media (max-width: 880px) { .fd-credit { display: none; } }   /* no room for the credit next to the date */
 @media (max-width: 600px) { .fd-updated { position: static; transform: none; flex-basis: 100%; padding: 0 0 0.3rem 1rem; font-size: 0.75rem; } }   /* phones: the date on a line of its own */
 
@@ -130,8 +130,10 @@ nav.navbar .navbar-title-text > a { cursor: pointer; }
 .csv { font-weight: 400; font-size: 0.78rem; margin-left: 0.5em; }
 .fd-linkrow { display: flex; justify-content: flex-start; margin: 0.15rem 0 0.4rem; }   /* in the sidebar, under the questions */
 .qpick > .side-note { display: none; }   /* "Click a selected item again to clear it.": its place is taken by "Copy link to this view" */
-.fd-copy { border: 1px solid #c9d6ea; background: #fff; color: #1f3d66; border-radius: 4px; padding: 3px 10px; font-size: 0.82rem; cursor: pointer; }
-.fd-copy:hover { background: #eef3fa; }
+.fd-copy, .fd-side { border: 1px solid #c9d6ea; background: #fff; color: #1f3d66; border-radius: 4px; padding: 3px 10px; font-size: 0.82rem; cursor: pointer; }
+.fd-copy:hover, .fd-side:hover { background: #eef3fa; }
+/* "Collapse all" above "Copy link to this view", "Reset" under it (Nov. 27); Reset with nothing to reset is dimmed */
+.fd-reset.fd-at-home, .fd-reset.fd-at-home:hover { opacity: 0.45; cursor: default; background: #fff; }
 
 /* Tables › Numbers in the chart, with "Compare with": the comparison table to the right of the selection's tables */
 .tpair { display: flex; flex-wrap: wrap; gap: 0 2.5rem; align-items: flex-start; }

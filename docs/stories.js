@@ -20,12 +20,12 @@ function fdAgency(a) { return a === "Department of Defense" || a === "Department
           <li><b>Questions 1–6</b>, on the left: Requests received &amp; processed · Response time · Backlog, staff &amp; cost · Outcomes &amp; exemptions · Appeals · Backlog vs intake. Each page has up to three numbers, each with how it is worked out, a chart over time and a chart by agency (and on Question 4, the exemptions used); under them, “Built from” opens the report tables and columns used.</li></ol>
         <p>In a chart by agency, click a row to open that agency or component; click the gold row (the one open) to go back up a level; double-click a component's row to go back to all agencies.</p>
         <p>A measure has the same colour on every page: requests received blue, requests processed red, the backlog purple, FOIA staff navy, total cost green; gold marks the agency or component open in a chart by agency. How requests and appeals ended, and the request tracks, have colours of their own, given above their charts.</p>
-        <p class="fd-small">The dashboard’s name in the top bar goes back to the overview; so does clicking a selected question again. “Reset” (top right) puts every choice back to how the dashboard opens: all agencies, all years, nothing compared, and all reporting agencies added up. It stays on the page you are on.</p></section>
+        <p class="fd-small">The dashboard’s name in the top bar goes back to the overview; so does clicking a selected question again. In the sidebar, under the questions: “Collapse all” folds every part of the page that folds (the title and the years, the agency row, “Built from”, and on Question 4 the exemptions), so the charts have the room; “Expand all” opens them again. “Reset” (under “Copy link to this view”) puts every choice back to how the dashboard opens: all agencies, all years, nothing compared, and all reporting agencies added up. It stays on the page you are on.</p></section>
       <section><h3>Choosing what you see</h3>
         <dl><dt>Agency (under the title, with Component and Compare with)</dt><dd>“All agencies (government total)”, or one agency. “Hide choices” folds this row to one line that says what is chosen; clicking the question's number (“Question 1”, or “Overview”) does the same for the title and the years. Both give the charts more room.</dd>
           <dt>Component</dt><dd>An office inside the agency you picked.</dd>
           <dt>Fiscal years (top right)</dt><dd>Pick All years, Last 10, Last 5 or the latest year; or drag the two handles on the year slider (the charts follow when you let go). Clicking a year moves the nearer handle there; double-clicking a year shows that year only. The numbers in the cards and the charts by agency are for the last year chosen.</dd>
-          <dt>Compare with (up to 5)</dt><dd>Adds agencies or components to compare: the cards get a row for each, and the chart over time shows one at a time, picked under “Showing” (on Question 6, backlog ÷ requests received has a line for each); × removes one. Agencies can be compared with each other; a component only within its own agency, with the agency’s total or its other components, because components differ too much in size and make-up from one agency to the next. To compare with all agencies, choose “All agencies (government total)” as the Agency. Choices that do not fit are greyed out. With a component chosen above, the first list is set to its agency; with an agency chosen, it starts on that agency, to add its components. The charts by agency mark the ones compared, and “Ranked within”, above them, switches to the agency of one compared, to see its components.</dd>
+          <dt>Compare with (up to 5)</dt><dd>Adds agencies or components to compare: the cards get a row for each, and the chart over time shows one at a time, picked under “Showing” (on Question 4, one small chart each, all at once; on Question 6, backlog ÷ requests received has a line for each, and under it each one has a small chart of its backlog and requests received); × removes one. Agencies can be compared with each other; a component only within its own agency, with the agency’s total or its other components, because components differ too much in size and make-up from one agency to the next. To compare with all agencies, choose “All agencies (government total)” as the Agency. Choices that do not fit are greyed out. With a component chosen above, the first list is set to its agency; with an agency chosen, it starts on that agency, to add its components. The charts by agency mark the ones compared, and “Ranked within”, above them, switches to the agency of one compared, to see its components.</dd>
           <dt>Agencies added up in the total</dt><dd>All reporting agencies (<span class="fd-range">71–122</span> a year), or only the <span class="fd-cohort">70 that reported all 18 years</span>, so a total does not grow just because more agencies report.</dd></dl>
 </section>
       <section><h3>Words to know</h3>
@@ -373,10 +373,36 @@ function fdAgency(a) { return a === "Department of Defense" || a === "Department
   if ([...start.keys()].length) restore(start);
 })();
 
-/* ---------- The dashboard's name in the top bar: back to the overview's cards. "Reset" at the top right: every choice back to
-   how the page opens (agency, component, compare list, years, "Agencies added up in the total"), staying on
-   the page that is showing. It sets the dashboard's own inputs, the way a user would, so the charts and the address follow.
-   The button keeps the class fd-home so the top-bar styles still apply. ---------- */
+/* ---------- "Collapse all" / "Expand all", in the sidebar above "Copy link to this view" (Nov. 27, user): folds, or opens, every
+   part of the page that folds: the question's title and the years, the agency row ("Hide choices"), "Built from", and on
+   question 4 the chart of exemptions. It works their own switches, so each keeps its fold as before when the question changes.
+   It reads "Collapse all" while any of them is open. ---------- */
+(function () {
+  let btn = null;
+  const parts = () => { const card = document.querySelector(".card.fd-card.fd-has-tl"), qn = card && card.querySelector(".qhead > .qnum"),
+      bar = card && card.querySelector(".fd-acbar"), tog = bar && bar.querySelector(":scope > .fd-actog")
+    return {card: qn ? card : null, qn, bar: tog ? bar : null, tog, det: [...document.querySelectorAll(".qpage details.qsrc, .qpage details.qex")].filter(d => d.offsetParent)} }
+  const anyOpen = (p = parts()) => !!((p.card && !p.card.classList.contains("fd-hdfold")) || (p.bar && !p.bar.classList.contains("fd-achide")) || p.det.some(d => d.open))
+  function setAll(open) { const p = parts()
+    if (p.card && p.card.classList.contains("fd-hdfold") === open) p.qn.click()
+    if (p.bar && p.bar.classList.contains("fd-achide") === open) p.tog.click()
+    p.det.forEach(d => { if (d.open !== open) d.open = open }) }
+  const label = () => { if (!btn) return; const t = anyOpen() ? "Collapse all" : "Expand all"; if (btn.textContent !== t) { btn.textContent = t; btn.setAttribute("aria-expanded", String(t === "Collapse all")) } }
+  function place() {
+    const row = document.querySelector(".fd-linkrow"), copy = row && row.querySelector(":scope > .fd-copy"); if (!copy) return;
+    if (!row.querySelector(":scope > .fd-foldall")) { btn = document.createElement("button"); btn.type = "button"; btn.className = "fd-side fd-foldall"
+      btn.title = "Fold or open the title and years, the agency row, “Built from” and the exemptions"
+      btn.addEventListener("click", () => { setAll(!anyOpen()); setTimeout(label, 0) }); copy.before(btn) }
+    label() }
+  new MutationObserver(place).observe(document.documentElement, {childList: true, subtree: true});
+  for (const ev of ["click", "keydown", "toggle"]) document.addEventListener(ev, () => setTimeout(label, 0), true);   // a part folded by hand ("toggle" does not bubble: caught on the way down)
+  document.addEventListener("DOMContentLoaded", place);
+})();
+
+/* ---------- The dashboard's name in the top bar: back to the overview's cards. "Reset", in the sidebar under "Copy link to this
+   view" (Nov. 27, user; it was at the top right of the top bar): every choice back to how the page opens (agency, component,
+   compare list, years, "Agencies added up in the total"), staying on the page that is showing. It sets the dashboard's own
+   inputs, the way a user would, so the charts and the address follow. ---------- */
 (function () {
   const openPanel = () => document.querySelector(".odetail:not([hidden])");
   const goHome = e => { if (e) e.preventDefault(); window.__openCard = null; window.__openFinding = null;
@@ -417,14 +443,17 @@ function fdAgency(a) { return a === "Department of Defense" || a === "Department
     } finally { busy = false; update() }
   }
   function place() {
-    const nav = document.querySelector("nav.navbar"); if (!nav || nav.querySelector(".fd-home")) return;
-    btn = document.createElement("button"); btn.type = "button"; btn.className = "fd-home fd-reset";
+    const name = document.querySelector("nav.navbar .navbar-title-text > a");
+    if (name && !name.dataset.fdHome) { name.dataset.fdHome = "1"; name.addEventListener("click", goHome); name.title = "Back to the overview" }
+    const row = document.querySelector(".fd-linkrow"), copy = row && row.querySelector(":scope > .fd-copy");   // the sidebar row is drawn by "Copy link to this view"
+    if (!copy || row.querySelector(":scope > .fd-reset")) return;
+    btn = document.createElement("button"); btn.type = "button"; btn.className = "fd-side fd-reset";
     btn.title = "Reset every choice to how the dashboard opens: agency, component, compare, years, agencies added up";
     btn.innerHTML = '<i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i> Reset';
-    btn.addEventListener("click", reset); nav.appendChild(btn);
-    const name = nav.querySelector(".navbar-title-text > a"); if (name) { name.addEventListener("click", goHome); name.title = "Back to the overview" }
+    btn.addEventListener("click", reset); copy.after(btn);
     update();
   }
+  new MutationObserver(place).observe(document.documentElement, {childList: true, subtree: true});
   document.addEventListener("DOMContentLoaded", place); place();
   document.addEventListener("click", () => setTimeout(update, 0), true);
   document.addEventListener("input", () => setTimeout(update, 0), true);

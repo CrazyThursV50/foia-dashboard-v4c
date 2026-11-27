@@ -69,8 +69,9 @@ nav.navbar .navbar-title-text, nav.navbar .navbar-title-text > a { color: var(--
 .bslib-sidebar-layout > .sidebar select:focus, .fd-acbar select:focus { outline: 2px solid var(--t-accent); outline-offset: 1px; box-shadow: none; }
 select:disabled, .bslib-sidebar-layout > .sidebar select:disabled, .fd-acbar select:disabled { opacity: 0.5; background-color: var(--t-bg); color: var(--t-muted); }
 input[type=radio], input[type=checkbox] { accent-color: var(--t-accent); }
-.fd-copy { border: 1px solid var(--t-line); background: var(--t-bg); color: var(--t-ink); border-radius: 0; font-family: var(--t-sans); font-weight: 600; }
-.fd-copy:hover { background: var(--t-ink); color: var(--t-bg); }
+.fd-copy, .fd-side { border: 1px solid var(--t-line); background: var(--t-bg); color: var(--t-ink); border-radius: 0; font-family: var(--t-sans); font-weight: 600; }
+.fd-copy:hover, .fd-side:hover { background: var(--t-ink); color: var(--t-bg); }
+.fd-reset.fd-at-home, .fd-reset.fd-at-home:hover { opacity: 0.45; cursor: default; background: var(--t-bg); color: var(--t-ink); }
 
 /* ---------- header card: title, years, agency row ---------- */
 .card.fd-card { background: transparent; border: 0; border-bottom: 3px solid var(--t-line); border-radius: 0; box-shadow: none; color: var(--t-ink); }

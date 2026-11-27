@@ -191,3 +191,8 @@ body:has(.odetail.fd-story:not([hidden])) .fd-acbar,
 body:has(.odetail.fd-story:not([hidden])) .qhead > .fd-qtitle,
 body:has(.odetail.fd-story:not([hidden])) .qhead > .fd-hdsum { display: none !important; }
 body:has(.odetail.fd-story:not([hidden])) .qhead > .fd-qstory { display: block; }
+/* lines set aside by the rule of "Compare with" (Nov. 27): greyed, each with its own ×; they come back when the selection allows them */
+.fd-parked { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin-top: 4px; font-size: 0.74rem; color: #5f6368; }
+.fd-parked-h { margin-right: 2px; }
+.fd-parked .fd-parked-chip { opacity: 0.6; border-style: dashed; text-decoration: line-through; text-decoration-color: rgba(0, 0, 0, 0.35); }
+.fd-parked-t { flex-basis: 100%; }

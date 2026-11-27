@@ -256,6 +256,7 @@ function fdAgency(a) { return a === "Department of Defense" || a === "Department
   const dirty = () => { const ag = formSel("Agency"), c = cmpBox();
     return !!(ag && ag.options.length && ag.value !== ag.options[0].value) || !!(c && Array.isArray(c.value) && c.value.length) };
   function reset() {
+    if (window.fdClearParked) window.fdClearParked();   // (Nov. 27) what the rule set aside goes too, or it would come back
     const c = cmpBox();
     if (c) {   // Compare with: back to an empty list and the two lists' first state
       const as = c.querySelector("select.cmp-agency"), cs = c.querySelector("select.cmp-comp");
@@ -519,11 +520,28 @@ function fdAgency(a) { return a === "Department of Defense" || a === "Department
     const t = cs && !cs.disabled && cs.options.length && cs.value !== cs.options[0].value ? cs.selectedOptions[0].textContent.trim() : null;
     return t ? `C|${a}|${(t.match(/\(([^()]+)\)$/) || [null, t])[1]}` : `A|${a}`;   // a component as "Compare with" keys it: by the short code in brackets
   }
-  let removed = [], removedAt = 0, busy = false;   // names taken out in the last few seconds
+  // Nov. 27 (user: choosing a component cleared the agencies being compared, and going back did not bring them back): a line
+  // that no longer fits, or that repeats the selection above, is set aside, not thrown away. It is listed, greyed, under the
+  // lines compared, and comes back by itself, in the order it was set aside, once the selection above allows it (room
+  // permitting); its × there drops it for good. "Clear all" and Reset drop what was set aside
+  let parked = [], putBack = [], putBackAt = 0, busy = false;   // set aside; names put back in the last few seconds
   const taken = new Set();   // agencies of the lines just taken out
   const tries = new Map();   // a line whose × did not take it out is not clicked again and again
   let presetFor, presetVal = "";   // the selection the first list was last set for, and the agency it was set to
   window.fdMainLine = () => mainLine();   // for the link restore
+  window.fdClearParked = () => { parked = []; putBack = []; const el = document.querySelector("div.cmp .fd-parked"); if (el) el.remove() };
+  function parkedEl(box) {   // what was set aside: greyed chips, each with its own ×, and a line saying when they come back
+    let el = box.querySelector(".fd-parked");
+    if (!parked.length) { if (el) el.remove(); return }
+    if (!el) { el = document.createElement("div"); el.className = "fd-parked"; (box.querySelector(".chips") || box).after(el) }
+    const key = parked.map(q => q.k).join("~"); if (el.dataset.k === key) return; el.dataset.k = key
+    const chips = parked.map(q => { const c = document.createElement("span"); c.className = "chip fd-parked-chip"; c.title = "Not on the chart for now: it comes back when the selection above allows it"
+      const x = document.createElement("button"); x.type = "button"; x.title = "Drop it"; x.textContent = "×"; x.onclick = () => { parked = parked.filter(z => z !== q); parkedEl(box) }
+      c.append(q.name, x); return c })
+    const h = document.createElement("span"); h.className = "fd-parked-h"; h.textContent = "Set aside for now:"
+    const t = document.createElement("div"); t.className = "fd-parked-t"; t.textContent = "They come back by themselves when the selection above allows them (a component is compared only within its own agency); × drops one."
+    el.replaceChildren(h, ...chips, t)
+  }
   function note(box) {
     let n = box.querySelector(".fd-cmp-note");
     if (!n) { n = document.createElement("div"); n.className = "fd-cmp-note"; n.setAttribute("aria-live", "polite"); (box.querySelector(".chips") || box).before(n) }
@@ -534,13 +552,20 @@ function fdAgency(a) { return a === "Department of Defense" || a === "Department
     if (!box.skipAdd) box.skipAdd = a => { const mm = mainLine(); return !!mm && fam(mm) === fdAgency(a) };   // asked by the input when an agency is chosen
     if (window.fdRestoring) { later(300); return }   // a link adds a component's agency first, then the component: judge the list once it is complete
     const m = mainLine(), have = m ? [m] : [], out = [];
-    for (const k of box.value) (fits(have, k) ? have : out).push(k);
-    if (out.length) {   // take out the first line that does not fit; the dashboard redraws the chips and this runs again
+    for (const k of box.value) (k !== m && fits(have, k) ? have : out).push(k);   // the selection itself, compared again, is set aside too
+    if (out.length) {   // set aside the first line that does not fit: its × takes it off the chart; the dashboard redraws the chips and this runs again
       const i = box.value.indexOf(out[0]), chip = box.querySelectorAll(".chips .chip")[i], x = chip && chip.querySelector("button");
       const n = (tries.get(out[0]) || 0) + 1; tries.set(out[0], n);
-      if (x && n <= 3) { if (Date.now() - removedAt >= 8000) removed = []; removed.push(chip.textContent.replace("×", "").trim()); taken.add(fam(out[0])); removedAt = Date.now(); busy = true; x.click(); setTimeout(() => { busy = false; check() }, 60); return }
+      if (x && n <= 3) { if (!parked.some(q => q.k === out[0])) parked.push({k: out[0], name: chip.textContent.replace("×", "").trim()}); if (out[0] !== m) taken.add(fam(out[0])); busy = true; x.click(); setTimeout(() => { busy = false; check() }, 60); return }
     }
     if (!out.length) tries.clear();
+    // put back what was set aside once the selection allows it, in the order it was set aside, while there is room
+    if (parked.length && box.restore && !window.fdRestoring) {
+      const back = [], cur = [...have];
+      for (const q of parked) if (q.k !== m && !box.value.includes(q.k) && fits(cur, q.k) && box.value.length + back.length < 5) { back.push(q); cur.push(q.k) }
+      if (back.length) { parked = parked.filter(q => !back.includes(q)); putBack = back.map(q => q.name); putBackAt = Date.now(); busy = true; box.restore(back.map(q => q.k)); setTimeout(() => { busy = false; check() }, 60); return }
+    }
+    parkedEl(box);
     const as = box.querySelector("select.cmp-agency"), cs = box.querySelector("select.cmp-comp");
     // the two lists still showing the agency of a line just taken out, or an agency that can no longer be added: back to
     // their first state, as "Clear all" leaves them
@@ -553,7 +578,7 @@ function fdAgency(a) { return a === "Department of Defense" || a === "Department
     const lock = !!(m && isComp(m) && own);
     if (as && box.preset) {
       if (lock && as.value !== own.value) { box.preset(own.value); presetVal = own.value }
-      else if (!lock && own && !as.value && presetFor !== m) { box.preset(own.value); presetVal = own.value }
+      else if (!lock && own && presetFor !== m && (!as.value || as.value === presetVal)) { box.preset(own.value); presetVal = own.value }
       else if (!m && as.value && as.value === presetVal && presetFor) first();
       presetFor = m;
       as.disabled = lock; as.title = lock ? "Set by the component chosen above: it is compared only within its own agency" : "";
@@ -570,15 +595,15 @@ function fdAgency(a) { return a === "Department of Defense" || a === "Department
       if (comps.length && comps.every(o => o.disabled) && !comps.some(o => o.value === m)) { cs.options[0].text = "Whole agency only"; cs.value = ""; cs.disabled = true; cs.dataset.fdWhole = "1"; wholeOnly = true; grey = false }   // another agency's components: none can be added
     }
     if (lock) grey = false;   // the locked list's greyed agencies cannot be seen
-    const n = note(box), recent = removed.length > 0 && Date.now() - removedAt < 8000;
-    const text = recent ? `Taken out: ${removed.join("; ")}. A component is compared only within its own agency.` : lock || wholeOnly ? RULE2 : grey ? RULE : "";
+    const n = note(box), recent = putBack.length > 0 && Date.now() - putBackAt < 8000;
+    const text = recent ? `Put back: ${putBack.join("; ")}.` : lock || wholeOnly ? RULE2 : grey ? RULE : "";
     if (n.textContent !== text) n.textContent = text;
     n.classList.toggle("fd-warn", !!recent); n.hidden = !text;
-    if (!recent) removed = [];
+    if (!recent) putBack = [];
   }
   let t = null;
   const later = (ms = 60) => { clearTimeout(t); t = setTimeout(check, ms) };
   new MutationObserver(() => later()).observe(document.documentElement, {childList: true, subtree: true});
   ["input", "change", "click"].forEach(e => document.addEventListener(e, () => later(), true));
-  setInterval(() => { if (removed.length && Date.now() - removedAt >= 8000) check() }, 1000);   // let the "Taken out" note go after a while
+  setInterval(() => { if (putBack.length && Date.now() - putBackAt >= 8000) check() }, 1000);   // let the "Put back" note go after a while
 })();

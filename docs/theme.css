@@ -219,6 +219,12 @@ div[class*="-swatches"] { font-family: var(--t-sans) !important; color: var(--t-
 .ocard { container-type: inline-size; }
 .oc-val { white-space: nowrap; font-size: min(2.5rem, 19cqi); }
 .ocard.hl .oc-val { font-size: min(2.5rem, calc((100cqi + 1.4rem) * 0.19)); }
+/* Nov. 28 (user: at 100% the cards were taller than wide): each card is a square, or a little taller where its hover box needs it; the labels of a row get
+   the same height and the chart takes the room left (c11, fit). Not stretched to the row, so the findings beside them cannot
+   make them taller; less room under the chart than before (1.4rem) */
+.ocard.sq { aspect-ratio: 1 / 1; align-self: start; padding-bottom: 0.4rem; }
+.ocard.hl.sq { padding-bottom: 0.4rem; }
+.ocard.sq .oc-val { margin: 0.3rem 0 0.1rem; }
 /* question 4 compared (Nov. 26, user): one small chart per entry, one under the other; the chart by component beside them stays in view while they scroll */
 .qmulti .qfig { margin-bottom: 0.4rem; }
 .qmulti .qfig h6 { font-size: 0.92rem; }

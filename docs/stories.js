@@ -287,7 +287,8 @@ function fdAgency(a) { return a === "Department of Defense" || a === "Department
 })();
 
 /* ---------- The view in the page address, and "Copy link to this view". The address records the question, agency, component,
-   years, compare list, the two radio choices and the Explore measure; opening such a link sets the same controls again, in
+   years, compare list, the two radio choices, the Explore measure and the page's own choices (question 2's track, "Showing",
+   "Ranked within"); opening such a link sets the same controls again, in
    order, the way a user would. ---------- */
 (function () {
   const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -297,6 +298,12 @@ function fdAgency(a) { return a === "Department of Defense" || a === "Department
   const fire = (el, ...ts) => ts.forEach(t => el.dispatchEvent(new Event(t, {bubbles: true})));
   const checkedText = lab => { const f = formOf(lab), i = f && f.querySelector("input:checked"); return i ? i.closest("label").textContent.trim() : null };
   let restoring = false, timer = null;
+  // the choices drawn on a question's own page, above its charts (Nov. 27 review: a link to question 2's complex track, or to
+  // ICE under "Showing", opened on the simple track and the first entry): question 2's track, "Showing" and "Ranked within",
+  // in the address only when another button than the first is on
+  const BARS = [["track", "Track"], ["show", "Showing"], ["within", "Ranked within"]];
+  const barOf = name => [...document.querySelectorAll(".qwithin:not(.qpad)")].find(x => { const s = x.querySelector("span"); return s && s.textContent.trim() === name });
+  const barPick = name => { const b = barOf(name), on = b && b.querySelector("button.on"); return on && on !== b.querySelector("button") ? on.dataset.k : null };
   function read() {
     const p = new URLSearchParams(), qp = document.querySelector(".qpick"), q = qp ? +qp.value : 0;
     if (q) p.set("q", q);
@@ -309,6 +316,7 @@ function fdAgency(a) { return a === "Department of Defense" || a === "Department
       if (lo !== all[0] || hi !== all[all.length - 1]) { p.set("from", lo); p.set("to", hi) } }
     const cmp = document.querySelector("div.cmp"); if (cmp && Array.isArray(cmp.value) && cmp.value.length) p.set("with", cmp.value.join("~"));
     if ((checkedText("Agencies added up in the total") || "").startsWith("Only")) p.set("scope", "same");
+    if (q && q !== 7) for (const [key, name] of BARS) { const k = barPick(name); if (k) p.set(key, k) }
     // (an address no longer carries an appeals base: Question 5 shows the reversal rate out of all processed appeals and out of
     // those decided, side by side, so "base=all" in an old link is left out)
     const od = document.querySelector(".odetail:not([hidden])");   // the card or the finding opened on the overview (a finding: find=N; Nov. 26, it wrote card=undefined)
@@ -352,7 +360,11 @@ function fdAgency(a) { return a === "Department of Defense" || a === "Department
       if (q) { const b = document.querySelector(`.qbtn[data-id="${q}"]`); if (b && +document.querySelector(".qpick").value !== q) b.click();
         if (q === 7) { const ty = p.get("type"), m = p.get("m");
           if (ty) { const s = await waitFor(() => selOf("Data type")); const o = s && [...s.options].find(o => o.textContent.trim().startsWith(ty)); if (o && s.value !== o.value) { s.value = o.value; fire(s, "input", "change"); await sleep(500) } }
-          if (m) { const s = await waitFor(() => { const x = selOf("Measure"); return x && [...x.options].some(o => o.textContent.trim() === m) && x }); if (s) { s.value = [...s.options].find(o => o.textContent.trim() === m).value; fire(s, "input", "change") } } } }
+          if (m) { const s = await waitFor(() => { const x = selOf("Measure"); return x && [...x.options].some(o => o.textContent.trim() === m) && x }); if (s) { s.value = [...s.options].find(o => o.textContent.trim() === m).value; fire(s, "input", "change") } } }
+        // last, once the page is drawn for the selection: the page's own choices (each one is kept by the page while it is redrawn)
+        if (q !== 7) for (const [key, name] of BARS) { const k = p.get(key); if (!k) continue;
+          await sleep(300); const b = await waitFor(() => { const bar = barOf(name); return bar && [...bar.querySelectorAll("button")].find(x => x.dataset.k === k) }, 5000);
+          if (b && !b.classList.contains("on")) b.click() } }
       await sleep(600);
     } finally { restoring = false; window.fdRestoring = false; sync() }
   }

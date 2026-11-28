@@ -182,6 +182,13 @@ div[class*="-swatches"] { font-family: var(--t-sans) !important; color: var(--t-
 .od-rows tr { border-top-color: var(--t-hair); }
 .od-rows tr:hover, .od-rows tr.on { background: var(--t-hover); }
 .od-rows td, .od-rows td.v { color: var(--t-ink); }
+/* Nov. 28 (user: how would anyone know a row can be clicked?): the row marked on the chart has a bar in its line's colour;
+   over another row its bar shows faintly (c11 also fades the chart's other lines) */
+.od-rows caption b { color: var(--t-ink); font-weight: 700; }
+.od-rows td:first-child { transition: box-shadow 0.12s; }
+.od-rows tr.on td:first-child { box-shadow: inset 4px 0 0 var(--c); }
+.od-rows tr:not(.on):hover td:first-child, .od-rows tr:not(.on):focus-visible td:first-child { box-shadow: inset 4px 0 0 color-mix(in srgb, var(--c) 45%, transparent); }
+.od-fig svg path[stroke], .od-fig svg circle[fill] { transition: opacity 0.12s; }
 
 /* ---------- the user guide ---------- */
 .fd-guide h2 { font-family: var(--t-sans); font-weight: 800; letter-spacing: -0.025em; color: var(--t-ink); }
